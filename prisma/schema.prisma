@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Art {
+  id      String    @id @default(uuid())
+  name    String    @unique
+  url     String    @unique
+  status  Int       @default(0)
+  Request Request[]
+
+  @@map("arts")
+}
+
+model Request {
+  id    String  @id @default(uuid())
+  size  String
+  color String
+  phone String
+  paid  Boolean @default(false)
+  artId String
+
+  art Art @relation(fields: [artId], references: [id])
+
+  @@map("requests")
+}
